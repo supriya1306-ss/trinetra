@@ -1,0 +1,101 @@
+:root {
+  --bg: #0b1220;
+  --panel: #121a2b;
+  --card: #1a2436;
+  --text: #eaf0ff;
+  --muted: #a8b2c8;
+  --primary: #4f7cff;
+  --accent: #12d6a7;
+  --danger: #ff5c77;
+  --border: #263147;
+}
+
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, sans-serif; }
+
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 14px 20px; background: rgba(18, 26, 43, 0.8); backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+}
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
+.brand .brand-text { font-weight: 700; letter-spacing: 0.5px; }
+
+.site-logo { height: 28px; width: auto; display: block; }
+
+/* Circular logo container */
+.logo-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(79,124,255,0.12), rgba(18,214,167,0.08));
+  border: 1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 2px 6px rgba(2,6,23,0.6) inset;
+  overflow: hidden;
+}
+
+.logo-wrap .site-logo { width: 28px; height: 28px; object-fit: contain; }
+.menu a { color: var(--muted); margin-left: 16px; text-decoration: none; }
+.menu a:hover { color: var(--text); }
+
+.hero {
+  display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;
+  padding: 40px 20px; background: linear-gradient(135deg, rgba(18,26,43,0.6), rgba(26,36,54,0.9));
+}
+.hero-content h1 { margin: 0 0 10px; font-size: 40px; }
+.hero-content p { color: var(--muted); max-width: 640px; }
+.cta-group { margin-top: 18px; display: flex; gap: 10px; }
+.btn {
+  display: inline-block; padding: 10px 14px; border-radius: 8px; background: var(--card);
+  color: var(--text); text-decoration: none; border: 1px solid var(--border); cursor: pointer;
+}
+.btn.primary { background: var(--primary); border-color: transparent; }
+.btn:hover { filter: brightness(1.1); }
+
+.hero-card {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--card);
+}
+.metric { text-align: center; }
+.metric-value { font-size: 32px; font-weight: 700; }
+.metric-label { color: var(--muted); }
+
+.section { padding: 30px 20px; }
+.section h2 { margin: 0 0 8px; }
+.section p { color: var(--muted); max-width: 900px; }
+
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px; margin-top: 14px;
+}
+
+.detect-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .detect-grid { grid-template-columns: 1fr; }
+}
+
+label { display: block; margin-top: 10px; margin-bottom: 6px; color: var(--muted); }
+input[type="url"], input[type="email"], textarea {
+  width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); color: var(--text);
+}
+.result { margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 10px; color: var(--text); }
+.list { display: grid; gap: 12px; }
+.list .item { border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: var(--panel); }
+
+.resource-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 12px; }
+.resource-card { padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--panel); }
+.resource-card h4 { margin: 0 0 6px; }
+.resource-card a { color: var(--accent); text-decoration: none; }
+.note { color: var(--muted); font-size: 14px; margin-top: 8px; }
+
+.footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 20px; border-top: 1px solid var(--border); color: var(--muted);
+}
+.footer-links a { color: var(--muted); margin-left: 12px; text-decoration: none; }
+.footer-links a:hover { color: var(--text); }

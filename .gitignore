@@ -137,3 +137,9 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Project ignores
+uploads/
+.DS_Store
+frontend/assets/*.db
+package-lock.json

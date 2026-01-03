@@ -1,0 +1,19 @@
+{
+  "guides": [
+    {
+      "title": "Spotting manipulated media",
+      "summary": "Check shadows, reflections, lip-sync, motion blur, and metadata.",
+      "link": "#"
+    },
+    {
+      "title": "Verify before you share",
+      "summary": "Cross-check with reliable outlets and original sources.",
+      "link": "#"
+    }
+  ],
+  "tools": [
+    { "name": "Reverse image search", "link": "https://images.google.com/" },
+    { "name": "InVID video verifier", "link": "https://www.invid-project.eu/tools-and-services/invid-verification-plugin/" },
+    { "name": "Wayback Machine", "link": "https://web.archive.org/" }
+  ]
+}
