@@ -10,8 +10,10 @@
 </head>
 <body>
   <header class="nav">
-    <a href="/assets/logo.png" class="brand">
-      <img src="/assets/logo.png" alt="Trinetra logo" class="site-logo" />
+    <a href="./" class="brand">
+      <div class="logo-wrap">
+        <img src="assets/logo.png" alt="Trinetra logo" class="site-logo" />
+      </div>
       <span class="brand-text">Trinetra</span>
     </a>
     <nav class="menu">
@@ -122,6 +124,12 @@
       <a href="#resources">Resources</a>
     </div>
   </footer>
+</footer>
+
+  <script>
+    // Backend API URL for the published frontend (Render deployment)
+    window.__TRINETRA_API__ = 'https://trinetra-fvjj.onrender.com';
+  </script>
 
   <script src="app.js"></script>
 </body>

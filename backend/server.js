@@ -29,41 +29,28 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', app: 'Trinetra' })
 
 // Detect (stub): text or URL analysis
 app.post('/api/detect', async (req, res) => {
-  const { text, url } = req.body || {};
+  // This endpoint now requires a `url` field in the JSON body.
+  // If you want text-only detection, run the server locally and extend this logic.
+  const { url } = req.body || {};
+  if (!url) return res.status(400).json({ error: 'Please provide a URL in the request body as `url`' });
 
-  // Simple heuristic scoring stub (replace with real model later)
+  // Simple heuristic scoring based on the URL/host (placeholder for real checks)
   const signals = [];
   let score = 0;
-
   function addSignal(label, weight) {
     signals.push({ label, weight });
     score += weight;
   }
 
-  if (text) {
-    const t = text.toLowerCase();
-    if (t.length < 30) addSignal('Very short claim', 0.15);
-    if ((t.match(/!/g) || []).length >= 3) addSignal('Sensational punctuation', 0.2);
-    if (/(shocking|secret|exposed|you won’t believe)/.test(t)) addSignal('Clickbait phrasing', 0.25);
-    if (!/[a-z]{3,}\s[a-z]{3,}/.test(t)) addSignal('Low linguistic richness', 0.1);
-    if (/forward this|share now/.test(t)) addSignal('Virality nudge', 0.2);
+  try {
+    const host = new URL(url).hostname;
+    if (/\.blogspot|\.wordpress|medium\.com/.test(host)) addSignal('Unverified host', 0.15);
+    if (!/\.(?:gov|edu|org|in)$/.test(host)) addSignal('Not an authority domain', 0.15);
+  } catch (err) {
+    addSignal('Malformed URL', 0.3);
   }
 
-  if (url) {
-    try {
-      const host = new URL(url).hostname;
-      if (/\.blogspot|\.wordpress|medium\.com/.test(host)) addSignal('Unverified host', 0.1);
-      if (!/\.(?:gov|edu|org|in)$/.test(host)) addSignal('Not an authority domain', 0.1);
-    } catch {
-      addSignal('Malformed URL', 0.2);
-    }
-  }
-
-  // Normalize score to risk bands
-  const risk =
-    score >= 0.6 ? 'high' :
-    score >= 0.3 ? 'medium' :
-    'low';
+  const risk = score >= 0.6 ? 'high' : score >= 0.3 ? 'medium' : 'low';
 
   res.json({
     risk,
