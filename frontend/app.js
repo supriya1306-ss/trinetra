@@ -1,4 +1,59 @@
-const API = location.origin;
+// API base URL: allow overriding for deployed static site by setting
+// `window.__TRINETRA_API__` in `index.html`. Falls back to same origin for local dev.
+const API = window.__TRINETRA_API__ || location.origin;
+
+// If site is served from GitHub Pages and API isn't configured, show a helpful notice
+function showBackendNotice() {
+  const noticeId = 'backend-notice';
+  if (document.getElementById(noticeId)) return;
+  const n = document.createElement('div');
+  n.id = noticeId;
+  n.style.background = '#ffefc2';n.style.color = '#2b2b2b';n.style.padding = '8px 12px';n.style.textAlign = 'center';n.style.fontSize = '13px';
+  n.innerHTML = 'Backend API not configured — detection and reporting features require the server.\n' +
+    'Run the backend locally or deploy it and set <code>window.__TRINETRA_API__</code> in index.html.';
+  document.body.insertBefore(n, document.body.firstChild);
+}
+
+if (location.hostname.endsWith('.github.io') && !window.__TRINETRA_API__) {
+  // show notice on static site to avoid confusing "Network error" messages
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showBackendNotice);
+  else showBackendNotice();
+}
+
+// Health banner for runtime diagnostics
+function setBackendBanner(text, ok = true) {
+  const id = 'backend-status';
+  let b = document.getElementById(id);
+  if (!b) {
+    b = document.createElement('div');
+    b.id = id;
+    b.style.position = 'fixed';
+    b.style.right = '12px';
+    b.style.bottom = '12px';
+    b.style.padding = '8px 10px';
+    b.style.borderRadius = '6px';
+    b.style.fontSize = '12px';
+    b.style.boxShadow = '0 2px 8px rgba(0,0,0,0.12)';
+    document.body.appendChild(b);
+  }
+  b.textContent = text;
+  b.style.background = ok ? '#e6ffed' : '#ffecec';
+  b.style.color = ok ? '#0b6623' : '#8a1f11';
+}
+
+async function checkBackend() {
+  try {
+    const r = await fetch(`${API}/api/health`, { cache: 'no-store' });
+    if (!r.ok) throw new Error('Status ' + r.status);
+    const j = await r.json();
+    setBackendBanner('Backend OK: ' + (j.app || 'unknown'), true);
+    return true;
+  } catch (err) {
+    console.error('Backend health check failed:', err);
+    setBackendBanner('Backend unreachable: ' + (err.message || err), false);
+    return false;
+  }
+}
 
 const statCheckedEl = document.getElementById('stat-checked');
 const statReportsEl = document.getElementById('stat-reports');
@@ -7,10 +62,13 @@ let assessedCount = 0;
 
 async function updateStats() {
   statCheckedEl.textContent = assessedCount;
-  const r = await fetch(`${API}/api/report`).then(x => x.json()).catch(() => ({ count: 0 }));
+  const r = await fetch(`${API}/api/report`).then(x => x.json()).catch(err => { console.error('Stats fetch error:', err); return ({ count: 0 }); });
   statReportsEl.textContent = r.count || 0;
 }
 updateStats();
+
+// Run a backend health check on load to surface connectivity issues
+checkBackend();
 
 // Detect text/link
 const detectForm = document.getElementById('detect-form');
@@ -24,7 +82,7 @@ detectForm.addEventListener('submit', async (e) => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: data.text, url: data.url })
-  }).then(r => r.json()).catch(() => ({ error: 'Network error' }));
+  }).then(r => r.json()).catch(err => { console.error('Detect fetch error:', err); return ({ error: 'Network error — backend unreachable: ' + (err.message || err) }); });
 
   if (res.error) {
     detectResult.innerHTML = `<span style="color: var(--danger)">${res.error}</span>`;
@@ -54,7 +112,7 @@ mediaForm.addEventListener('submit', async (e) => {
   const fd = new FormData(mediaForm);
   mediaResult.innerHTML = 'Uploading...';
   const res = await fetch(`${API}/api/detect/media`, { method: 'POST', body: fd })
-    .then(r => r.json()).catch(() => ({ error: 'Network error' }));
+    .then(r => r.json()).catch(err => { console.error('Media fetch error:', err); return ({ error: 'Network error — backend unreachable: ' + (err.message || err) }); });
 
   if (res.error) {
     mediaResult.innerHTML = `<span style="color: var(--danger)">${res.error}</span>`;
@@ -89,7 +147,7 @@ reportForm.addEventListener('submit', async (e) => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
-  }).then(r => r.json()).catch(() => ({ error: 'Network error' }));
+  }).then(r => r.json()).catch(err => { console.error('Report fetch error:', err); return ({ error: 'Network error — backend unreachable: ' + (err.message || err) }); });
 
   if (res.error) {
     reportResult.innerHTML = `<span style="color: var(--danger)">${res.error}</span>`;
