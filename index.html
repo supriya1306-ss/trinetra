@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Trinetra — Fight Disinformation & Deepfakes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <a href="/assets/logo.png" class="brand">
+      <img src="/assets/logo.png" alt="Trinetra logo" class="site-logo" />
+      <span class="brand-text">Trinetra</span>
+    </a>
+    <nav class="menu">
+      <a href="#home">Home</a>
+      <a href="#detect">Detect</a>
+      <a href="#report">Report</a>
+      <a href="#resources">Resources</a>
+      <a href="#about">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="hero-content">
+        <h1>See clearly. Share responsibly.</h1>
+        <p>Trinetra helps you assess the risk of disinformation and deepfakes, with practical guidance and tools.</p>
+        <div class="cta-group">
+          <a href="#detect" class="btn primary">Try detection</a>
+          <a href="#report" class="btn">Report content</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <div class="metric">
+          <div class="metric-value" id="stat-checked">0</div>
+          <div class="metric-label">Items assessed</div>
+        </div>
+        <div class="metric">
+          <div class="metric-value" id="stat-reports">0</div>
+          <div class="metric-label">Community reports</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="detect" class="section">
+      <h2>Detect risk</h2>
+      <p>Paste a claim or a link. We’ll estimate risk and highlight signals to review.</p>
+      <div class="detect-grid">
+        <div class="card">
+          <h3>Text or link analysis</h3>
+          <form id="detect-form">
+            <label>Claim text</label>
+            <textarea name="text" rows="4" placeholder="Paste the claim or caption..."></textarea>
+            <label>URL (optional)</label>
+            <input type="url" name="url" placeholder="https://example.com/article" />
+            <button type="submit" class="btn primary">Assess risk</button>
+          </form>
+          <div id="detect-result" class="result"></div>
+        </div>
+        <div class="card">
+          <h3>Media analysis (placeholder)</h3>
+          <form id="media-form" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*,video/*" />
+            <button type="submit" class="btn">Upload & assess</button>
+          </form>
+          <div id="media-result" class="result"></div>
+          <div class="note">This demo uses a placeholder. Integrate real forensic checks (metadata, C2PA, lip-sync) later.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="report" class="section">
+      <h2>Report suspicious content</h2>
+      <p>Flag content for review. We’ll log it and you can track submissions.</p>
+      <div class="card">
+        <form id="report-form">
+          <label>Suspicious text</label>
+          <textarea name="text" rows="3" placeholder="Describe the content..."></textarea>
+          <label>URL</label>
+          <input type="url" name="url" placeholder="https://..." />
+          <label>Notes</label>
+          <textarea name="notes" rows="3" placeholder="Context, where you saw it, why it seems misleading..."></textarea>
+          <label>Contact (optional)</label>
+          <input type="email" name="contact" placeholder="name@example.com" />
+          <button type="submit" class="btn primary">Submit report</button>
+        </form>
+        <div id="report-result" class="result"></div>
+      </div>
+
+      <div class="card">
+        <h3>Recent reports</h3>
+        <div id="reports-list" class="list"></div>
+      </div>
+    </section>
+
+    <section id="resources" class="section">
+      <h2>Resources</h2>
+      <div id="resources-grid" class="resource-grid"></div>
+    </section>
+
+    <section id="about" class="section">
+      <h2>About Trinetra</h2>
+      <p>
+        Trinetra is a community-driven initiative to counter the rapid, uncontrolled spread of disinformation and deepfakes.
+        We combine practical detection, reporting, and digital literacy tools to help users make informed decisions.
+      </p>
+      <ul class="bullets">
+        <li><strong>Hybrid detection:</strong> Heuristics now; model-based detection later.</li>
+        <li><strong>Transparency:</strong> Show signals and recommendations, not just a score.</li>
+        <li><strong>Privacy-first:</strong> Minimal data collection for reports.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>© Trinetra</div>
+    <div class="footer-links">
+      <a href="#about">About</a>
+      <a href="#resources">Resources</a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
