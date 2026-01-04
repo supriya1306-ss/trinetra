@@ -1,4 +1,24 @@
-const API = location.origin;
+// API base URL: allow overriding for deployed static site by setting
+// `window.__TRINETRA_API__` in `index.html`. Falls back to same origin for local dev.
+const API = window.__TRINETRA_API__ || location.origin;
+
+// If site is served from GitHub Pages and API isn't configured, show a helpful notice
+function showBackendNotice() {
+  const noticeId = 'backend-notice';
+  if (document.getElementById(noticeId)) return;
+  const n = document.createElement('div');
+  n.id = noticeId;
+  n.style.background = '#ffefc2';n.style.color = '#2b2b2b';n.style.padding = '8px 12px';n.style.textAlign = 'center';n.style.fontSize = '13px';
+  n.innerHTML = 'Backend API not configured — detection and reporting features require the server.\n' +
+    'Run the backend locally or deploy it and set <code>window.__TRINETRA_API__</code> in index.html.';
+  document.body.insertBefore(n, document.body.firstChild);
+}
+
+if (location.hostname.endsWith('.github.io') && !window.__TRINETRA_API__) {
+  // show notice on static site to avoid confusing "Network error" messages
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', showBackendNotice);
+  else showBackendNotice();
+}
 
 const statCheckedEl = document.getElementById('stat-checked');
 const statReportsEl = document.getElementById('stat-reports');
@@ -24,7 +44,7 @@ detectForm.addEventListener('submit', async (e) => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: data.text, url: data.url })
-  }).then(r => r.json()).catch(() => ({ error: 'Network error' }));
+  }).then(r => r.json()).catch(() => ({ error: 'Network error — backend unreachable' }));
 
   if (res.error) {
     detectResult.innerHTML = `<span style="color: var(--danger)">${res.error}</span>`;
@@ -54,7 +74,7 @@ mediaForm.addEventListener('submit', async (e) => {
   const fd = new FormData(mediaForm);
   mediaResult.innerHTML = 'Uploading...';
   const res = await fetch(`${API}/api/detect/media`, { method: 'POST', body: fd })
-    .then(r => r.json()).catch(() => ({ error: 'Network error' }));
+    .then(r => r.json()).catch(() => ({ error: 'Network error — backend unreachable' }));
 
   if (res.error) {
     mediaResult.innerHTML = `<span style="color: var(--danger)">${res.error}</span>`;
@@ -89,7 +109,7 @@ reportForm.addEventListener('submit', async (e) => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data)
-  }).then(r => r.json()).catch(() => ({ error: 'Network error' }));
+  }).then(r => r.json()).catch(() => ({ error: 'Network error — backend unreachable' }));
 
   if (res.error) {
     reportResult.innerHTML = `<span style="color: var(--danger)">${res.error}</span>`;
